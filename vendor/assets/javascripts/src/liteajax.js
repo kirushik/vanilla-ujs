@@ -26,6 +26,7 @@ var LiteAjax = (function () {
         eval(xhr.response);
       }
 
+      window.ajaxRequestsInProgress -= 1;
       var event = new CustomEvent('ajaxComplete', {detail: xhr});
       document.dispatchEvent(event);
     });
@@ -54,6 +55,11 @@ var LiteAjax = (function () {
       data = JSON.stringify(data)
     }
 
+    if ( window.ajaxRequestsInProgress === undefined ) {
+      window.ajaxRequestsInProgress = 1;
+    } else {
+      window.ajaxRequestsInProgress += 1;
+    }
     var beforeSend = new CustomEvent('ajax:before', {detail: xhr});
     document.dispatchEvent(beforeSend);
     xhr.send(data);
