@@ -14,11 +14,18 @@ var LiteAjax = (function () {
 
     options = options || {};
     url = url || options.url || location.href || '';
-    data = options.data;
+    var data = options.data;
 
-    var xhr;
+    options.method = options.method || 'GET';
 
-    xhr = new XMLHttpRequest();
+    // PhantomJS workaround
+    if (options.method === 'PATCH') {
+      data['_method'] = 'PATCH';
+      options.method = 'PUT';
+    }
+
+
+    var xhr = new XMLHttpRequest();
 
     xhr.addEventListener('load', function () {
       responseType = xhr.getResponseHeader('content-type');
